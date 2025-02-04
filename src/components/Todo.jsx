@@ -3,8 +3,18 @@ import InputField from "./body/InputField";
 import Title from "./head/Title";
 import ToDoList from "./body/ToDoList";
 
+const DEFAULT_TASKS = [
+  { id: 1, task: "Learn JavaScript and React", completed: true },
+  { id: 2, task: "Code a ToDo App", completed: false },
+  { id: 3, task: "Make dinner and go to sleep", completed: false },
+];
+
+const getFromTodoList = (key) => {
+  const storedList = JSON.parse(localStorage.getItem(key));
+  return storedList && storedList.length > 0 ? storedList : DEFAULT_TASKS;
+};
 const Todo = () => {
-  const [todo, setTodo] = useState([]);
+  const [todoList, setTodoList] = useState(() => getFromTodoList("todoList"));
   const inputRef = useRef(null);
 
   const addTask = () => {
@@ -15,16 +25,16 @@ const Todo = () => {
       task,
       completed: false,
     };
-    setTodo((prev) => [...prev, newTodo]);
+    setTodoList((prev) => [...prev, newTodo]);
     inputRef.current.value = "";
   };
 
   const removeTask = (id) => {
-    setTodo((prev) => prev.filter((task) => task.id !== id));
+    setTodoList((prev) => prev.filter((task) => task.id !== id));
   };
 
   const toggleTaskCompletion = (id) => {
-    setTodo((prev) =>
+    setTodoList((prev) =>
       prev.map((todo) => {
         if (todo.id === id) {
           return { ...todo, completed: !todo.completed };
@@ -35,15 +45,15 @@ const Todo = () => {
   };
 
   useEffect(() => {
-    console.log(todo);
-  }, [todo]);
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+  }, [todoList]);
 
   return (
     <div className="place-self-center bg-white min-h-[550px] max-w-md flex flex-col p-7 rounded-xl w-11/12">
       <Title />
       <InputField ref={inputRef} addTask={addTask} />
       <ToDoList
-        toDoList={todo}
+        toDoList={todoList}
         removeTask={removeTask}
         toggleTask={toggleTaskCompletion}
       />

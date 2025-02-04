@@ -2,7 +2,6 @@ import tick from "../../assets/tick.png";
 import not_tick from "../../assets/not_tick.png";
 import delete_icon from "../../assets/delete.png";
 const ToDoItem = ({ id, task, isComplete, removeTask, toggleTask }) => {
-  console.log(isComplete);
   return (
     <>
       <li className="flex items-center justify-between">
